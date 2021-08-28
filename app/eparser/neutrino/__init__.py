@@ -37,3 +37,15 @@ def get_attributes(data):
 def get_xml_attributes(attr):
     attrs = attr.attributes
     return {t: attrs[t].value for t in attrs.keys()}
+
+# Override _write_data function to escape correctly
+import xml.dom.minidom as md
+def wd(writer, data):
+    "Writes datachars to writer."
+    if data:
+        data = data.replace("&", "&amp;").replace("'", "&apos;"). \
+                    replace('"',"&quot;").replace("<","&lt;"). \
+                    replace(">","&gt;")
+        writer.write(data)
+
+md._write_data = wd
